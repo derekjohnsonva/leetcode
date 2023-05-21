@@ -7,6 +7,7 @@
 // descendant of itself).”
 
 
+use std::collections::VecDeque;
 use std::rc::Rc;
 use std::cell::RefCell;
 use leetcode::TreeNode;
@@ -17,19 +18,35 @@ fn main() {
 }
 
 impl Solution {
+    fn dfs (root: Option<Rc<RefCell<TreeNode>>>, p: Option<Rc<RefCell<TreeNode>>>) -> Option<Vec<i32>> {
+        let queue = VecDeque::new();
+        queue.push_back(root);
+        while let Some(node) = queue.pop_front() {
+            if node.eq(&p) {
+                
+            } 
+        }
+        Some(Vec::new())
+    }
     pub fn lowest_common_ancestor(root: Option<Rc<RefCell<TreeNode>>>, p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
-       unimplemented!() 
+
     }
 }
 
 
 #[cfg(test)]
 mod test {
-    use std::vec;
 
     use super::*;
     #[test]
     fn ex1() {
-        let root = vec![Some(6),Some(2),Some(8),Some(0),Some(4),Some(7),Some(9),None,None ,Some(3),Some(5)]
+        let root = vec![Some(6),Some(2),Some(8),Some(0),Some(4),Some(7),Some(9),None,None ,Some(3),Some(5)];
+        let root = TreeNode::new_from_vec(root);
+        let root = Some(Rc::new(RefCell::new(root)));
+        let p = Some(Rc::new(RefCell::new(TreeNode::new(2))));
+        let q = Some(Rc::new(RefCell::new(TreeNode::new(8))));
+        let lca = Solution::lowest_common_ancestor(root, p, q);
+        // Check that the val of lca is 6
+        assert_eq!(lca.unwrap().borrow().val, 6);
     }
 }

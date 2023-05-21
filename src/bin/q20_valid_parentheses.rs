@@ -60,22 +60,22 @@ mod test {
     use super::*;
     #[test]
     fn ex1() {
-        let output = solution::is_valid("()".to_string());
+        let output = Solution::is_valid("()".to_string());
         assert!(output);
     }
     #[test]
     fn ex2() {
-        let output = solution::is_valid("[]{}".to_string());
+        let output = Solution::is_valid("[]{}".to_string());
         assert!(output);
     }
     #[test]
     fn ex3() {
-        let output = solution::is_valid("([{}])".to_string());
+        let output = Solution::is_valid("([{}])".to_string());
         assert!(output);
     }
     #[test]
     fn ex4() {
-        let output = solution::is_valid("(]".to_string());
+        let output = Solution::is_valid("(]".to_string());
         assert!(!output);
     }
 }
