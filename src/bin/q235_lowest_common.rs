@@ -21,31 +21,33 @@ impl Solution {
         p: i32,
         q: i32,
     ) -> (bool, bool, Option<Rc<RefCell<TreeNode>>>) {
-        assert_ne!(p, q);
-        assert!(root.is_some());
+        // Check to see if we have hit a None value
+        if root.is_none() {
+            return (false, false, None);
+        }
+        // Now check to see if the current node is one of the values p q
         let root_val = root.clone().unwrap();
         let root_val = root_val.borrow();
         let mut r = (root_val.val == p, root_val.val == q, None);
-        let mut left_result = (false, false, None);
-        let mut right_result = (false, false, None);
-
-        if root_val.left.is_some() {
-            left_result = Self::search(root_val.left.clone(), p, q);
+        // check the left node 
+        let left_result = Self::search(root_val.left.clone(), p, q);
+        // Check to see if the left search returned the lowest common ancestor 
+        if left_result.2.is_some() {
+            return left_result;
         }
-
-        if root_val.right.is_some() {
-            right_result = Self::search(root_val.right.clone(), p, q);
-        }
+        // Check the right node
+        let right_result = Self::search(root_val.right.clone(), p, q);
         r.0 = r.0 || left_result.0 || right_result.0;
         r.1 = r.1 || left_result.1 || right_result.1;
-        if left_result.2.is_some() {
-            r.2 = left_result.2;
-        } else if right_result.2.is_some() {
-            r.2 = right_result.2;
-        } else {
-            if r.0 && r.1 {
-                r.2 = root;
-            }
+        // Ceck to see if the right search returned the lowest common ancestor
+        if right_result.2.is_some() {
+            return right_result; 
+        }
+        // If the lowest common ancestor is not the left or the right,
+        // we are either at a dead end or we are at the the lca
+        // Check to see if both p and q have been seen at this node.
+        if r.0 && r.1 {
+            r.2 = root;
         }
         return r;
     }
@@ -54,7 +56,10 @@ impl Solution {
         p: Option<Rc<RefCell<TreeNode>>>,
         q: Option<Rc<RefCell<TreeNode>>>,
     ) -> Option<Rc<RefCell<TreeNode>>> {
-        let r = Self::search(root, p.unwrap().borrow().val, q.unwrap().borrow().val);
+        let p_val = p.unwrap().borrow().val;
+        let q_val = q.unwrap().borrow().val;
+        assert_ne!(p_val, q_val);
+        let r = Self::search(root, p_val, q_val);
         r.2
     }
 }
