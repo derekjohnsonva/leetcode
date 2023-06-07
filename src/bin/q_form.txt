@@ -1,0 +1,14 @@
+fn main() {
+    println!("Solution to Q");
+}
+
+pub struct Solution;
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn ex1() {
+
+    }
+}
