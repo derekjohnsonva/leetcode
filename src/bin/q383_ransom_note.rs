@@ -14,7 +14,6 @@ impl Solution {
                 .entry(v)
                 .and_modify(|cur_count| *cur_count += 1)
                 .or_insert(1);
-            println!("{} maps to {}", v, magazine_vals.get(&v).unwrap());
         });
         for ch in ransom_note.chars() {
             match magazine_vals.get(&ch) {
