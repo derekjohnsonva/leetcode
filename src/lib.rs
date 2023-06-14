@@ -64,6 +64,32 @@ impl ListNode {
         ListNode { next: None, val }
     }
 }
+pub fn list_node_from_vec(vals: &Vec<i32>) -> Option<Box<ListNode>> {
+        if vals.is_empty() {
+            return None;
+        }
+        let mut prev_node: Option<Box<ListNode>> = None;
+        for val in vals.into_iter().rev() {
+            let mut new_node = ListNode::new(*val);
+            match prev_node {
+                Some(node) => {
+                    new_node.next = Some(Box::clone(&node));
+                }
+                None => {}
+            }
+            prev_node = Some(Box::new(new_node));
+        }
+        prev_node
+    }
+
+pub fn vec_from_list_node(mut head: Option<Box<ListNode>>) -> Vec<i32> {
+        let mut vals: Vec<i32> = Vec::new();
+        while let Some(node) = head {
+            vals.push(node.val);
+            head = node.next;
+        }
+        vals
+    }
 
 #[cfg(test)]
 mod test {
