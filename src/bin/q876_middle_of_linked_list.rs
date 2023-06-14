@@ -7,20 +7,16 @@ pub struct Solution;
 
 impl Solution {
     pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        let mut iterator = head.clone();
-        let mut len = 0;
-        while let Some(val) = iterator {
-            len += 1;
-            iterator = val.clone().next;
+        let (mut first, mut second) = (&head, &head);
+        let mut second_move_flag = false;
+        while let Some(val) = first {
+            first = &val.next;
+            if second_move_flag {
+                second = &second.as_ref().unwrap().next;
+            }
+            second_move_flag = !second_move_flag;
         }
-        println!("len = {len}");
-        let mut iterator = head.clone();
-        let mut half = len / 2;
-        while half > 0 {
-            half -= 1;
-            iterator = iterator.unwrap().clone().next;
-        }
-        iterator
+        second.clone()
     }
 }
 #[cfg(test)]
