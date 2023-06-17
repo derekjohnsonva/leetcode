@@ -6,24 +6,11 @@ pub struct Solution;
 
 impl Solution {
     pub fn max_sub_array(nums: Vec<i32>) -> i32 {
-        let mut cur_max = i32::MIN;
-        // basic idea is that we will use a sliding window with 2 rules
-        // 1) Expand the end of the window when the cur_sum is greater than 0
-        // 2) shrink the start of the window when the cur_sum is less than 0
-        let mut cur_sum = 0;
-        let (mut start, mut end) = (0, 0);
-        while end < nums.len() {
-            println!("{start}, {end}");
-            cur_sum += nums[end];
-            println!("Cur sum = {cur_sum}");
-            cur_max = i32::max(cur_max, cur_sum);
-            end += 1;
-            while cur_sum <= 0 && start < end {
-                cur_sum -= nums[start];
-                start += 1;
-            }
-        }
-        cur_max
+        nums.iter().fold((i32::MIN, 0), |(max_sum, cur_sum), val| {
+            let cur_sum = i32::max(cur_sum + *val, *val);
+            let max_sum = i32::max(max_sum, cur_sum);
+            (max_sum, cur_sum)
+        }).0
     }
 }
 
