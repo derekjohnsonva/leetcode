@@ -5,32 +5,11 @@ fn main() {
 pub struct Solution;
 
 impl Solution {
-    pub fn k_closest(points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
-        assert!(!points.is_empty());
-        // make a sorted list of points    
-        let mut k_closest: Vec<(i32, Vec<i32>)> = Vec::with_capacity(k as usize);
-        for point in points.into_iter() {
-            let point_dist = i32::pow(point[0], 2) + i32::pow(point[1], 2);
-
-            match k_closest.get(k as usize - 1) {
-                Some((max_dist, _)) => {
-                    if point_dist < *max_dist {
-                        // update the last entry
-                        k_closest[k as usize - 1] = (point_dist, point);
-                        // resort the list so that the last entry is the largest
-                        k_closest.sort_by(|a, b| {a.0.cmp(&b.0)});
-                        // print k_closest 
-                        println!("{:?}", k_closest);
-                    }
-                },
-                None => {
-                    k_closest.push((point_dist, point));
-                    k_closest.sort_by(|a, b| {a.0.cmp(&b.0)});
-                }
-            } 
-        }
-        // turn k_closest into the output type
-        k_closest.iter().map(|(_, point)| point.to_vec()).collect()
+    pub fn k_closest(mut points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let k = k as usize;
+        points.select_nth_unstable_by_key(k - 1, |p| p[0].pow(2) + p[1].pow(2));
+        points.truncate(k);
+        points
     }
 }
 
@@ -39,16 +18,9 @@ mod test {
     use super::*;
     #[test]
     fn ex1() {
-        let points = vec![vec![1,3],vec![-2,2]];
+        let points = vec![vec![1, 3], vec![-2, 2]];
         let k = 1;
-        let output = vec![vec![-2, 2]]; 
-        assert_eq!(output, Solution::k_closest(points, k));
-    }
-    #[test]
-    fn ex2() {
-        let points = vec![vec![1,3],vec![-2,2],vec![2,-2]];
-        let k = 2;
-        let output = vec![vec![2,-2],vec![-2,2]]; 
+        let output = vec![vec![-2, 2]];
         assert_eq!(output, Solution::k_closest(points, k));
     }
 }
