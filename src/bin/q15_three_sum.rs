@@ -11,26 +11,28 @@ impl Solution {
         // add all of the nums to a HashMap. The number should map to a vec containing the indeces
         // in which the number appears.
         let mut map = HashMap::new();
+        // sorting helps us to not add the same set twice
         nums.sort_unstable();
         for (i, &num) in nums.iter().enumerate() {
             map.entry(num).or_insert(vec![]).push(i);
         }
-        let mut seen_pairs = HashSet::new();
         let mut results: Vec<Vec<i32>> = Vec::new();
+        let mut seen_a_vals = HashSet::new();
         for (i, num_a) in nums.iter().enumerate().take(nums.len() - 2) {
+            // either add the num_a to seen_a_vals or skip over it
+            if !seen_a_vals.insert(num_a) {
+                continue;
+            }
+            let mut seen_b_vals = HashSet::new();
             for (b_index, num_b) in nums.iter().enumerate().skip(i + 1).take(nums.len() - 1) {
-                println!("{i} {b_index}");
-                if seen_pairs.contains(&(num_a, num_b)) {
-                    println!("continued from here");
+                if !seen_b_vals.insert(num_b) {
                     continue;
                 }
                 let num_c = -(num_a + num_b);
                 // check to see if num_c is present in the map
                 if let Some(c_indexes) = map.get(&num_c) {
-                    // check to see if there is an index greater then b_index 
-                    for &c_index in c_indexes.iter().filter(|&&c_index| c_index > b_index) {
-                        println!("{i} {b_index} {c_index}");
-                        seen_pairs.insert((num_a, num_b));
+                    // check to see if there is an index greater then b_index
+                    for &_c_index in c_indexes.iter().filter(|&&c_index| c_index > b_index) {
                         results.push(vec![*num_a, *num_b, num_c]);
                         break;
                     }
